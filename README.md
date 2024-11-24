@@ -220,8 +220,8 @@ const { bulkhead } = require('cockatiel');
 const app = express();
 const port = 8080;
 
-// Configurando bulkhead com cockatiel (Máximo de 2 requisições simultâneas)
-const bulkheadPolicy = bulkhead(2);
+// Configurando bulkhead com cockatiel (Máximo de 5 requisições simultâneas)
+const bulkheadPolicy = bulkhead(5); // Aumentado de 2 para 5
 
 // Função simulando chamada externa
 async function externalService() {
@@ -236,8 +236,10 @@ async function externalService() {
 app.get('/api/bulkhead', async (req, res) => {
     try {
         const result = await bulkheadPolicy.execute(() => externalService());
+        console.log(`Requisição bem-sucedida: ${result}`);  // Logar o resultado
         res.send(result);
     } catch (error) {
+        console.error(`Erro na requisição: ${error.message}`);  // Logar o erro
         res.status(500).send(`Erro: ${error.message}`);
     }
 });
@@ -268,7 +270,7 @@ Aumentar quantidade de chamadas simultâneas e avaliar o comportamento.
 
 ```
 // INSIRA SUA ANÁLISE OU PARECER ABAIXO
-
+Configurei o bulkheadPolicy para permitir até 5 requisições simultâneas (de 2 para 5) e na chamadas adicionamos logs para cada requisição bem-sucedida e erro de requisição, o que permitirá avaliar o comportamento do sistema quando estiver sob carga.
 
 
 ```
