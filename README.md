@@ -135,10 +135,10 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const port = 8080;
 
-// Middleware de rate limiting (Limite de 5 requisições por minuto)
+// Middleware de rate limiting (Limite de 100 requisições por minuto)
 const limiter = rateLimit({
     windowMs: 60 * 1000,  // 1 minuto
-    max: 5,  // Limite de 5 requisições
+    max: 100,  // Limite de 100 requisições
     message: 'Você excedeu o limite de requisições, tente novamente mais tarde.',
 });
 
@@ -160,10 +160,24 @@ app.get('/api/ratelimit', async (req, res) => {
     }
 });
 
+// Função para simular o erro de Rate Limit
+function simulateRateLimitError() {
+    for (let i = 0; i < 105; i++) {  // Faz 105 requisições para garantir que o limite será excedido
+        fetch(`http://localhost:${port}/api/ratelimit`)
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Erro:', error));
+    }
+}
+
 // Iniciando o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
+
+    // Simula o erro de Rate Limit
+    simulateRateLimitError();
 });
+
 
 ```
 
@@ -183,7 +197,11 @@ Alterar limite de requisições permitidas para 100 num intervalo de 1 minuto e 
 
 ```
 // INSIRA SUA ANÁLISE OU PARECER ABAIXO
-
+Código acima ajustado e testado.
+Rate Limiting - Modificamos o windowMs para 1 minuto (60 * 1000 milissegundos), alterado max para 100 requisições.
+Função simulateRateLimitError - Criei  uma função para simular o erro de Rate Limit, fazendo 105 requisições para a rota /api/ratelimit.
+Usei fetch para enviar as requisições e garantimos que o limite será excedido, resultando no erro de Rate Limit "Chamando a Função simulateRateLimitError"
+** Após iniciar o servidor, chamamos simulateRateLimitError para simular as requisições e gerar o erro de Rate Limit.
 
 
 ```
