@@ -289,12 +289,12 @@ const CircuitBreaker = require('opossum');
 const app = express();
 const port = 8080;
 
-// Função simulando chamada externa com 50% de falhas
+// Função simulando chamada externa com 20% de falhas
 async function externalService() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            const shouldFail = Math.random() > 0.8;  // Simula o percentual de falhas
-            if (shouldFail) {
+            const shouldFail = Math.random() > 0.2;  // Simula o percentual de falhas (20% de chance de falha)
+            if (!shouldFail) {
                 reject(new Error('Falha na chamada externa'));
             } else {
                 resolve('Resposta da chamada externa');
@@ -333,6 +333,7 @@ app.get('/api/circuitbreaker', async (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
 ```
 
 **Utilize o comando para executar a aplicação**
@@ -351,6 +352,13 @@ Observar comportamento do circuito no console.
 
 ```
 // INSIRA SUA ANÁLISE OU PARECER ABAIXO
+
+Falhas:
+Modifiquei Math.random() > 0.8 para Math.random() > 0.2, reduzindo a chance de falha de 80% para 20%.
+
+Circuit Breaker:
+Mantive  a configuração do Circuit Breaker com um errorThresholdPercentage de 50%, o que significa que o circuito abrirá se mais de 50% das requisições falharem.
+Mantive o resetTimeout de 10000 milissegundos (10 segundos) para tentar fechar o circuito após esse período.
 
 
 
