@@ -83,7 +83,7 @@ app.get('/api/health', (req, res) => {
 // Rota que faz a chamada simulada com timeout
 app.get('/api/timeout', async (req, res) => {
     try {
-        const result = await timeoutPromise(3000, externalService());
+        const result = await timeoutPromise(10000, externalService());
         res.send(result);
     } catch (error) {
         res.status(500).send(`Erro: ${error.message}`);
@@ -113,6 +113,9 @@ Ajustar configurações de timeout e corrigir erro de timeout execedido ao invoc
 
 ```
 // INSIRA SUA ANÁLISE OU PARECER ABAIXO
+Podemos aumentar o tempo limite do timeoutPromise para garantir que ele seja maior do que o tempo que externalService leva ou 
+reduzir o tempo de espera da função externalService para que seja menor do que o tempo limite.
+**Inserido código ajustado acima.
 
 
 
